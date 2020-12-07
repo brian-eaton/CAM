@@ -354,7 +354,8 @@ subroutine write_initial_file()
    use shr_kind_mod,     only: cl=>shr_kind_cl
    use cam_instance,     only: inst_suffix
    use filenames,        only: interpret_filename_spec
-   use pio,              only: file_desc_t,  pio_enddef, pio_closefile
+   use pio,              only: file_desc_t,  pio_enddef, pio_closefile, &
+                               pio_seterrorhandling, PIO_BCAST_ERROR
    use cam_pio_utils,    only: cam_pio_createfile
    use cam_abortutils,   only: endrun
 
@@ -377,6 +378,8 @@ subroutine write_initial_file()
    fname = interpret_filename_spec( filename_spec )
 
    call cam_pio_createfile(fh, trim(fname), 0)
+
+   call pio_seterrorhandling(fh, PIO_BCAST_ERROR)
 
    call cam_mpas_setup_restart(fh, initial_stream, MPAS_IO_WRITE, endrun)
 
