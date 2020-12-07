@@ -353,6 +353,7 @@ subroutine write_initial_file()
 
    use shr_kind_mod,     only: cl=>shr_kind_cl
    use cam_instance,     only: inst_suffix
+   use time_manager,     only: get_curr_date, get_stop_date, timemgr_datediff
    use filenames,        only: interpret_filename_spec
    use pio,              only: file_desc_t,  pio_enddef, pio_closefile, &
                                pio_seterrorhandling, PIO_BCAST_ERROR
@@ -363,6 +364,8 @@ subroutine write_initial_file()
    use cam_mpas_subdriver, only: cam_mpas_setup_restart, cam_mpas_write_restart
 
    ! Local variables
+   integer           :: yr, mon, day, tod1, tod2, ymd1, ymd2
+   real(r8)          :: days
    character(len=cl) :: filename_spec ! filename specifier
    character(len=cl) :: fname         ! initial filename
    type(file_desc_t) :: fh
@@ -370,6 +373,17 @@ subroutine write_initial_file()
 
    type (MPAS_Stream_type) :: initial_stream
    !----------------------------------------------------------------------------
+
+   ! Check whether the current time is during the final partial timestep taken by
+   ! CAM.  Don't write the initial file during that time.  This avoids the problem
+   ! of having an initial files written with a timestamp that is after the stop date.
+   call get_curr_date(yr, mon, day, tod1)
+   ymd1 = 10000*yr + 100*mon + day
+   call get_stop_date(yr, mon, day, tod2)
+   ymd2 = 10000*yr + 100*mon + day
+   ! (ymd2,tod2) - (ymd1,tod1)
+   call timemgr_datediff(ymd1, tod1, ymd2, tod2, days)
+   if (days < 0._r8) return
 
    ! Set filename template for initial file based on instance suffix
    ! (%c = caseid, %y = year, %m = month, %d = day, %s = seconds in day)
