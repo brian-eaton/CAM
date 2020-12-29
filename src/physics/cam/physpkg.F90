@@ -943,6 +943,7 @@ contains
     !-----------------------------------------------------------------------
     use time_manager,   only: get_nstep
     use cam_diagnostics,only: diag_allocate, diag_physvar_ic
+    use cam_esp,        only: cam_esp_write
     use check_energy,   only: check_energy_gmean
     use phys_control,   only: phys_getopts
     use spcam_drivers,  only: tphysbc_spcam
@@ -1061,6 +1062,9 @@ contains
     call t_adj_detailf(-1)
     call t_stopf ('bc_physics')
 
+    ! Write ESP file
+    call cam_esp_write(phys_state)
+
     ! Don't call the rest in CRM mode
     if(single_column.and.scm_crm_mode) return
 
@@ -1085,6 +1089,7 @@ contains
     use physics_buffer,  only: physics_buffer_desc, pbuf_get_chunk, pbuf_deallocate, pbuf_update_tim_idx
     use mo_lightning,    only: lightning_no_prod
     use cam_diagnostics, only: diag_deallocate, diag_surf
+    use cam_esp,         only: cam_esp_resume
     use physconst,       only: stebol, latvap
     use carma_intr,      only: carma_accumulate_stats
     use spmd_utils,      only: mpicom
@@ -1116,6 +1121,9 @@ contains
     !
 
     if(single_column.and.scm_crm_mode) return
+
+    ! If in resume mode read file from ESP component and update state and tend
+    call cam_esp_resume(ztodt, phys_state, phys_tend)
 
     !-----------------------------------------------------------------------
     ! Tendency physics after coupler
