@@ -166,7 +166,7 @@ endif
 # Rules to build MCT library. 
 # SRCDIR is passed via the commandline because of a bug in the MCT configure.
 $(MCT_LIBDIR)/mct/libmct.a: 
-	$(MAKE) -C $(MCT_LIBDIR) SRCDIR=$(ROOTDIR)/cime/src/externals/mct
+	$(MAKE) -C $(MCT_LIBDIR) SRCDIR=$(ROOTDIR)/cime/src/externals/mct FCFLAGS=$(MCT_FFLAGS)
 shr_kind_mod.o: $(MCT_LIBDIR)/mct/libmct.a
 perf_utils.o: $(MCT_LIBDIR)/mct/libmct.a
 RtmSpmd.o: $(MCT_LIBDIR)/mct/libmct.a
@@ -532,7 +532,7 @@ ifeq ($(FC_TYPE),gnu)
 
   CPPDEF        += -DNO_R16 -DCPRGNU $(NO_CONTIGUOUS_FLAG)
   CFLAGS        += -std=gnu99
-  FC_FLAGS      := -fno-range-check -fcray-pointer
+  FC_FLAGS      := -fno-range-check -fcray-pointer -fallow-argument-mismatch -fallow-invalid-boz
   FC_FLAGS_NOOPT:= $(FC_FLAGS) -O0
   FREEFLAGS     := -ffree-form -ffree-line-length-none
   FIXEDFLAGS    := -ffixed-form -ffixed-line-length-132
@@ -559,6 +559,9 @@ ifeq ($(FC_TYPE),gnu)
   FFLAGS       := $(cpp_path) $(mod_path) $(CPPDEF) $(FC_FLAGS)
   FFLAGS_NOOPT := $(cpp_path) $(mod_path) $(CPPDEF) $(FC_FLAGS_NOOPT)
   FC_AUTO_R8   := -fdefault-real-8 -fdefault-double-8
+
+# allow argument type mismatch in old MCT code
+  MCT_FFLAGS   := -fallow-argument-mismatch -O
 
 # 2019-06-17 fpe trapping on this file is throwing an erroneous exception.  Just build
 #            it without debug for now
