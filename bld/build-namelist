@@ -105,9 +105,6 @@ if ($ProgDir) {
     $cfgdir = $cwd;
 }
 
-# CAM root directory.
-my $cam_root = absolute_path("$cfgdir/../../..");
-
 my $cfg_cache = "config_cache.xml";           # Default name of configuration cache file
 my $outdirname = ".";                         # Default name of output directory name
 
@@ -342,6 +339,23 @@ if (defined $opts{'use_case'}) {
     }
 
     if ($print>=2) { print "Using namelist use case file $use_case_file$eol"; }
+}
+
+#-----------------------------------------------------------------------------------------------
+# Look for the ESMF mesh file for the physics grid.  This is currently only needed
+# for some special cases, so don't fail if not found.
+
+# The filepaths for the ESMF mesh files that are shared by the CESM components is contained
+# in the file ccs_config/component_grids_nuopc.xml.  Make sure it's available.
+my $cam_root = $cfg->get('cam_root');
+my $component_grids_xml = "$cam_root/ccs_config/component_grids_nuopc.xml";
+(-f "$component_grids_xml")  or  die <<"EOF";
+** $ProgName - ERROR: Cannot find $component_grids_xml **
+EOF
+
+my $physics_mesh_file = find_mesh_file($cfg, $component_grids_xml);
+if ($print>=2 and defined $physics_mesh_file) {
+    print "Using physics mesh file $physics_mesh_file$eol";
 }
 
 #-----------------------------------------------------------------------------------------------
@@ -2907,7 +2921,7 @@ if ($waccmx) {
     add_default($nl, 'fv_high_altitude', 'val'=>'.true.');
   }
   if ($ionos ne 'none') {
-    add_default($nl, 'cam_physics_mesh');
+    add_default($nl, 'cam_physics_mesh', 'val'=>$physics_mesh_file);
     add_default($nl, 'oplus_grid');
     add_default($nl, 'edyn_grid');
   }
@@ -4941,6 +4955,63 @@ sub check_snapshot_settings {
             }
         }
     }
+}
+
+#-----------------------------------------------------------------------------------------------
+
+sub find_mesh_file
+{    
+    # Parse the XML code in ccs_config/component_grids_nuopc.xml to find the
+    # ESMF mesh file for the CAM physics grid.
+
+    my $cfg                 = shift;    # reference to CAM's config object
+    my $component_grids_xml = shift;    # xml file containing the mesh filepaths
+   
+    my $physics_mesh_file;          # return the filepath (undef if not found)
+    my $cam_grid;                   # grid specifier used in component_grids_nuopc.xml
+
+    # get the grid specifiers used by CAM
+    my $hgrid = $cfg->get('hgrid'); # horizontal grid specifer
+    my $npg   = $cfg->get('npg');   # physics grid specifier used by SE dycore
+
+    $cam_grid = $hgrid;
+    if ($npg) {$cam_grid .= "\.pg$npg";}
+
+    # Parse XML file
+    my $xml = XML::Lite->new( $component_grids_xml );
+    my $root = $xml->root_element();
+
+    # Check for valid root node
+    my $name = $root->get_name();
+    $name eq "domains" or die
+	"ERROR: $component_grids_xml has root node \"$name\": expected \"domains\"\n";
+
+    # The children of the XML root object are xml elements, each of which uses the
+    # attribure "name" to specify the grid.  Loop through the elements looking for
+    # the requested cam grid.
+    my @children = $root->get_children();
+    foreach my $e (@children) {
+        my $name = $e->get_attribute('name');
+        if ($name eq $cam_grid) {
+
+            # Found the required element.  It's children include a "mesh" element
+            # which contains the filepath.
+            
+            my @elems = $e->get_children();
+            foreach my $a (@elems) {
+                my $a_name = $a->get_name();
+                if ($a_name eq 'mesh') {
+                    $physics_mesh_file = $a->get_content();
+
+                    # Strip off the '$DIN_LOC_ROOT/' prefix
+                    $physics_mesh_file =~ s!\$DIN_LOC_ROOT\/!!;
+                    
+                }
+            }
+        }
+    }
+
+    return $physics_mesh_file;
 }
 
 #-----------------------------------------------------------------------------------------------
