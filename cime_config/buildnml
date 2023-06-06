@@ -47,6 +47,10 @@ def buildnml(case, caseroot, compname):
     RUN_REFTOD          = case.get_value("RUN_REFTOD")
     COMP_INTERFACE      = case.get_value("COMP_INTERFACE")
 
+    # ATM_DOMAIN_MESH is not set if the MCT driver is used.
+    # atm_domain_mesh is set to None in that case.  Check for that before using.
+    atm_domain_mesh     = case.get_value("ATM_DOMAIN_MESH")
+
     stream_ndep_year_first    = case.get_value("CAM_STREAM_NDEP_YEAR_FIRST")
     stream_ndep_year_last     = case.get_value("CAM_STREAM_NDEP_YEAR_LAST")
     stream_ndep_year_align    = case.get_value("CAM_STREAM_NDEP_YEAR_ALIGN")
@@ -171,6 +175,9 @@ def buildnml(case, caseroot, compname):
             buildnl_opts += ["-use_case", CAM_NML_USE_CASE]
 
         buildnl_opts += ["-inputdata", input_data_list]
+
+        if (atm_domain_mesh != None) and (atm_domain_mesh != 'UNSET'):
+            CAM_NAMELIST_OPTS += " cam_physics_mesh='"      + atm_domain_mesh.strip()           + "'"
 
         CAM_NAMELIST_OPTS += " stream_ndep_year_first="     + stream_ndep_year_first 
         CAM_NAMELIST_OPTS += " stream_ndep_year_last="      + stream_ndep_year_last
