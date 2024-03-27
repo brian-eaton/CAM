@@ -6,9 +6,11 @@ module interp_mod
   use interpolate_mod,     only: interp_gweight => gweight
   use dyn_grid,            only: elem,fvm
   use spmd_utils,          only: iam
-  use cam_history_support, only: fillvalue
   use hybrid_mod,          only: hybrid_t, config_thread_region
   use cam_abortutils,      only: endrun
+!++dbg
+  use cam_logfile,         only: iulog
+!--dbg
 
   implicit none
   private
@@ -186,7 +188,11 @@ CONTAINS
     end if
   end subroutine set_interp_hfile
 
-  subroutine write_interpolated_scalar(File, varid, fld, numlev, data_type, decomp_type)
+  subroutine write_interpolated_scalar(File, varid, fld, numlev, data_type, decomp_type, &
+!++dbg
+                                       fillvalue, dbg)
+!                                       fillvalue)
+!--dbg
     use pio,              only: file_desc_t, var_desc_t
     use pio,              only: iosystem_desc_t
     use pio,              only: pio_initdecomp, pio_freedecomp
@@ -214,6 +220,10 @@ CONTAINS
     type(var_desc_t) , intent(inout) :: varid
     real(r8),          intent(in)    :: fld(:,:,:)
     integer,           intent(in)    :: numlev, data_type, decomp_type
+    real(r8),          intent(in)    :: fillvalue
+!++dbg
+    logical, intent(in) :: dbg
+!--dbg
     !
     ! local variables
     !
@@ -287,6 +297,13 @@ CONTAINS
     pio_subsystem => shr_pio_getiosys(atm_id)
 
     if(decomp_type == phys_decomp) then
+!++dbg
+    if (dbg) then
+       write(iulog,*) 'nsize, nhalo, nhcc, numlev = ', nsize, nhalo, nhcc, numlev
+       write(iulog,*) 'min,max fld=   ', minval(fld), &
+                                         maxval(fld)
+    end if
+!--dbg
 
       allocate(fld_dyn(nsize*nsize,numlev,nelemd))
       fld_dyn = -999_R8
@@ -298,11 +315,27 @@ CONTAINS
             fld_dyn(blk_ind(1), k, ie) = fld(icol, k, lchnk-begchunk+1)
          end do
       end do
+!++dbg
+    if (dbg) then
+       write(iulog,*) 'min,max fld_dyn=   ', minval(fld_dyn), &
+                                             maxval(fld_dyn)
+    end if
+!--dbg
 
       if (fv_nphys > 0) then
         do ie = 1, nelemd
           fld_tmp(1:nsize,1:nsize,:,1,ie) = RESHAPE(fld_dyn(:,:,ie),(/nsize,nsize,numlev/))
         end do
+!++dbg
+    if (dbg) then
+       write(iulog,*) 'min,max fld_tmp=   ', minval(fld_tmp(1:nsize,1:nsize,:,1,:)), &
+                                             maxval(fld_tmp(1:nsize,1:nsize,:,1,:))
+       write(iulog,*) '# fld_tmp fillvalues = ', &
+          count(fld_tmp(1:nsize,1:nsize,:,1,:) == fillvalue)
+       write(iulog,*) '# fld_tmp >=0 values = ', &
+          count(fld_tmp(1:nsize,1:nsize,:,1,:) >= 0._r8)
+    end if
+!--dbg
       else
         call initEdgeBuffer(par, edgebuf, elem, numlev,nthreads=1)
 
@@ -346,6 +379,20 @@ CONTAINS
       !check if fill values are present:
       usefillvalues = any(fld_tmp(:,:,:,:,nets:nete) == fillvalue)
     end if
+!++dbg
+    if (dbg) then
+       write(iulog,*) 'After fill_halo_and_extend_panel:............'
+       write(iulog,*) 'nelemd, nets, nete= ', nelemd, nets, nete
+       write(iulog,*) 'usefillvalues= ', usefillvalues
+       write(iulog,*) 'min,max domain portion of fld_tmp=   ', &
+          minval(fld_tmp(1:nsize,1:nsize,:,1,:)), maxval(fld_tmp(1:nsize,1:nsize,:,1,:))
+       write(iulog,*) '# domain fld_tmp fillvalues = ', &
+          count(fld_tmp(1:nsize,1:nsize,:,1,:) == fillvalue)
+       write(iulog,*) 'min,max extended fld_tmp=   ', &
+          minval(fld_tmp(:,:,:,:,:)), maxval(fld_tmp(:,:,:,:,:))
+       write(iulog,*) '# extended fld_tmp fillvalues = ', count(fld_tmp == fillvalue)
+    end if
+!--dbg
     !
     ! WARNING - 1:nelemd and nets:nete
     !
@@ -383,6 +430,18 @@ CONTAINS
       end if
       st = en+1
     end do
+!++dbg
+    if (dbg) then
+       write(iulog,*) 'After interpolate_scalar:............'
+       write(iulog,*) 'ncnt_out = ', ncnt_out
+       write(iulog,*) 'min,max fldout = ', minval(fldout), maxval(fldout)
+       write(iulog,*) '# fldout values in [0,100] = ', &
+          count(fldout >= 0._r8 .and. fldout <= 100._r8)
+       write(iulog,*) '# fldout fillvalues = ', count(fldout == fillvalue)
+       write(iulog,*) 'min,max idof = ', minval(idof), maxval(idof)
+       write(iulog,*) '# idof values = 0 = ', count(idof == 0)
+    end if
+!--dbg
 
     if(numlev==1) then
        call pio_initdecomp(pio_subsystem, data_type, (/nlon,nlat/), idof, iodesc)
@@ -404,7 +463,8 @@ CONTAINS
 
   end subroutine write_interpolated_scalar
 
-  subroutine write_interpolated_vector(File, varidu, varidv, fldu, fldv, numlev, data_type, decomp_type)
+  subroutine write_interpolated_vector(File, varidu, varidv, fldu, fldv, numlev, data_type, decomp_type, &
+                                       fillvalue)
     use pio,              only: file_desc_t, var_desc_t
     use pio,              only: iosystem_desc_t
     use pio,              only: pio_initdecomp, pio_freedecomp
@@ -433,6 +493,7 @@ CONTAINS
     type(var_desc_t),  intent(inout) :: varidu, varidv
     real(r8),          intent(in)    :: fldu(:,:,:), fldv(:,:,:)
     integer,           intent(in)    :: numlev, data_type, decomp_type
+    real(r8),          intent(in)    :: fillvalue
 
     type(hybrid_t)                 :: hybrid
     type(io_desc_t)                :: iodesc

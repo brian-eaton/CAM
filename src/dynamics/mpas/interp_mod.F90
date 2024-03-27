@@ -58,12 +58,14 @@ end subroutine set_interp_hfile
 
 !=========================================================================================
 
-subroutine write_interpolated_scalar(File, varid, fld, numlev, data_type, decomp_type)
+subroutine write_interpolated_scalar(File, varid, fld, numlev, data_type, decomp_type, &
+                                     fillvalue)
 
    type(file_desc_t), intent(inout) :: File
    type(var_desc_t), intent(inout) :: varid
    real(r8), intent(in) :: fld(:,:,:)
    integer, intent(in) :: numlev, data_type, decomp_type
+   real(r8), intent(in) :: fillvalue
    !----------------------------------------------------------------------------
 
 
@@ -74,12 +76,13 @@ end subroutine write_interpolated_scalar
 !=========================================================================================
 
 subroutine write_interpolated_vector(File, varidu, varidv, fldu, fldv, &
-   numlev, data_type, decomp_type) 
+   numlev, data_type, decomp_type, fillvalue)
 
    type(file_desc_t), intent(inout) :: File
    type(var_desc_t), intent(inout) :: varidu, varidv
    real(r8), intent(in) :: fldu(:,:,:), fldv(:,:,:)
    integer, intent(in) :: numlev, data_type, decomp_type
+   real(r8), intent(in) :: fillvalue
    !----------------------------------------------------------------------------
 
    call endrun('FATAL - write_interpolated_vector is a stub, you shouldnt get here')

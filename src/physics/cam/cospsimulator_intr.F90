@@ -582,7 +582,7 @@ CONTAINS
           write(iulog,*)'  Number of COSP subcolumns                = ', cosp_ncolumns
           write(iulog,*)'  Frequency at which cosp is called        = ', cosp_nradsteps
           write(iulog,*)'  Enable radar simulator                   = ', lradar_sim
-          write(iulog,*)'  Enable calipso simulator                   = ', llidar_sim
+          write(iulog,*)'  Enable calipso simulator                 = ', llidar_sim
           write(iulog,*)'  Enable ISCCP simulator                   = ', lisccp_sim
           write(iulog,*)'  Enable MISR simulator                    = ', lmisr_sim
           write(iulog,*)'  Enable MODIS simulator                   = ', lmodis_sim
@@ -902,9 +902,9 @@ CONTAINS
     end if
 
     ! RADAR SIMULATOR OUTPUTS
+    allocate(sd_cs(begchunk:endchunk), rcfg_cs(begchunk:endchunk))
     if (lradar_sim) then
 
-       allocate(sd_cs(begchunk:endchunk), rcfg_cs(begchunk:endchunk))
        do i = begchunk, endchunk
           sd_cs(i)   = sd
           rcfg_cs(i) = rcfg_cloudsat

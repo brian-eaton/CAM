@@ -5279,6 +5279,11 @@ end subroutine print_active_fldlst
     real(r4),            allocatable :: rtemp2(:,:)
     real(r4),            allocatable :: rtemp3(:,:,:)
     integer                          :: begdim3, enddim3, ind3
+!++dbg
+    logical :: dbg
+
+    dbg = trim(tape(t)%hlist(fld)%field%name) == 'FISCCP1_COSP'
+!--dbg
 
     interpolate = (interpolate_output(t) .and. (.not. restart))
     patch_output = (associated(tape(t)%patches) .and. (.not. restart))
@@ -5287,6 +5292,13 @@ end subroutine print_active_fldlst
 
     ! Shape on disk
     call tape(t)%hlist(fld)%field%get_shape(fdims, frank)
+!++dbg
+    if (dbg) then
+       write(iulog,*) 'FISCCP_COSP info:'
+       write(iulog,*) 'fdims= ',fdims
+       write(iulog,*) 'frank= ',frank
+    end if
+!--dbg
 
     ! Shape of array
     dimind = tape(t)%hlist(fld)%field%get_dims()
@@ -5298,6 +5310,12 @@ end subroutine print_active_fldlst
       nadims = 3
     end if
     fdecomp = tape(t)%hlist(fld)%field%decomp_type
+!++dbg
+    if (dbg) then
+       write(iulog,*) 'adims=   ',adims
+       write(iulog,*) 'fdecomp= ',fdecomp
+    end if
+!--dbg
 
     ! num_patches will loop through the number of patches (or just one
     !             for the whole grid) for this field for this tape
@@ -5335,6 +5353,11 @@ end subroutine print_active_fldlst
           end if
 
           mdimsize = tape(t)%hlist(fld)%field%enddim2 - tape(t)%hlist(fld)%field%begdim2 + 1
+!++dbg
+    if (dbg) then
+       write(iulog,*) 'mdimsize=   ',mdimsize
+    end if
+!--dbg
           if (mdimsize == 0) then
             mdimsize = tape(t)%hlist(fld)%field%numlev
           end if
@@ -5345,11 +5368,22 @@ end subroutine print_active_fldlst
             call pio_setframe(tape(t)%Files(f), compid, int(max(1,nfils(t)),kind=PIO_OFFSET_KIND))
             call write_interpolated(tape(t)%Files(f), varid, compid,              &
                  tape(t)%hlist(fld)%hbuf, tape(t)%hlist(compind)%hbuf,          &
-                 mdimsize, ncreal, fdecomp)
+                 mdimsize, ncreal, fdecomp, tape(t)%hlist(fld)%field%fillvalue)
           else if (tape(t)%hlist(fld)%field%zonal_complement <= 0) then
             ! Scalar field
-            call write_interpolated(tape(t)%Files(f), varid,                      &
-                 tape(t)%hlist(fld)%hbuf, mdimsize, ncreal, fdecomp)
+!++dbg
+    if (dbg) then
+       write(iulog,*) 'min,max hbuf=   ', minval(tape(t)%hlist(fld)%hbuf), &
+                                          maxval(tape(t)%hlist(fld)%hbuf)
+       write(iulog,*) '# hbuf fillvalues =   ', &
+          count(tape(t)%hlist(fld)%hbuf == tape(t)%hlist(fld)%field%fillvalue)
+    end if
+!--dbg
+             call write_interpolated(tape(t)%Files(f), varid, tape(t)%hlist(fld)%hbuf, &
+!++dbg
+                  mdimsize, ncreal, fdecomp, tape(t)%hlist(fld)%field%fillvalue, dbg)
+!                  mdimsize, ncreal, fdecomp, tape(t)%hlist(fld)%field%fillvalue)
+!--dbg
           end if
         else if (nadims == 2) then
           ! Special case for 2D field (no levels) due to hbuf structure
@@ -5516,6 +5550,9 @@ end subroutine print_active_fldlst
 #endif
 
     integer :: yr, mon, day      ! year, month, and day components of a date
+!++dbg
+    integer :: yr_mid, mon_mid, day_mid ! year, month, and day components of midpoint date
+!--dbg
     integer :: nstep             ! current timestep number
     integer :: ncdate(maxsplitfiles) ! current (or midpoint) date in integer format [yyyymmdd]
     integer :: ncsec(maxsplitfiles)  ! current (or midpoint) time of day [seconds]
@@ -5529,7 +5566,9 @@ end subroutine print_active_fldlst
     logical :: prev              ! Label file with previous date rather than current
     logical :: duplicate         ! Flag for duplicate file name
     integer :: ierr
-    integer :: ncsec_temp
+!++dbg
+!    integer :: ncsec_temp
+!--dbg
 #if ( defined BFB_CAM_SCAM_IOP )
     integer :: tsec             ! day component of current time
     integer :: dtime            ! seconds component of current time
@@ -5548,42 +5587,53 @@ end subroutine print_active_fldlst
     call get_curr_date(yr, mon, day, ncsec(instantaneous_file_index))
     ncdate(instantaneous_file_index) = yr*10000 + mon*100 + day
     call get_curr_time(ndcur, nscur)
+!++dbg
+      write(iulog,*)'nstep,ncdate,ncsec,ndcur,nscur: ',nstep,ncdate(1),ncsec(1),ndcur,nscur
+      write(iulog,*)'nstep/=0,day==1,ncsec==0,hstwr: ',(nstep/=0),(day==1),(ncsec(1)==0),&
+         ( (nstep /= 0) .and. (day == 1) .and. (ncsec(instantaneous_file_index) == 0) )
+!--dbg
     !
     ! Write time-varying portion of history file header
     !
     do t=1,ptapes
-      if (nflds(t) == 0 .or. (restart .and.(.not.rgnht(t)))) cycle
-      !
-      ! Check if this is the IC file and if it's time to write.
-      ! Else, use "nhtfrq" to determine if it's time to write
-      ! the other history files.
-      !
-      if((.not. restart) .or. rgnht(t)) then
-        if( is_initfile(file_index=t) ) then
-          hstwr(t) =  write_inithist()
-          prev     = .false.
-        else
-          if (nhtfrq(t) == 0) then
-            hstwr(t) = nstep /= 0 .and. day == 1 .and. ncsec(instantaneous_file_index) == 0
-            prev     = .true.
+       if (nflds(t) == 0 .or. (restart .and.(.not.rgnht(t)))) cycle
+       !
+       ! Check if this is the IC file and if it's time to write.
+       ! Else, use "nhtfrq" to determine if it's time to write
+       ! the other history files.
+       !
+       if((.not. restart) .or. rgnht(t)) then
+          if( is_initfile(file_index=t) ) then
+             hstwr(t) =  write_inithist()
+             prev     = .false.
           else
-            if (nstep == 0) then
-              if (write_nstep0) then
-                hstwr(t) = .true.
-              else
-                ! zero the buffers if nstep==0 data not written
-                do f = 1, nflds(t)
-                  call h_zero(f, t)
-                end do
-              end if
-            else
-              hstwr(t) = mod(nstep,nhtfrq(t)) == 0
-            endif
-            prev = .false.
-           end if
-        end if
-      end if
-      time = ndcur + nscur/86400._r8
+             if (nhtfrq(t) == 0) then
+!++dbg
+                hstwr(t) = ( (nstep /= 0) .and. (day == 1) .and. (ncsec(instantaneous_file_index) == 0) )
+!            hstwr(t) = nstep /= 0 .and. day == 1 .and. ncsec(instantaneous_file_index) == 0
+!--dbg
+                prev     = .true.
+             else
+                if (nstep == 0) then
+                   if (write_nstep0) then
+                      hstwr(t) = .true.
+                   else
+                      ! zero the buffers if nstep==0 data not written
+                      do f = 1, nflds(t)
+                         call h_zero(f, t)
+                      end do
+                   end if
+                else
+                   hstwr(t) = mod(nstep,nhtfrq(t)) == 0
+                endif
+                prev = .false.
+             end if
+          end if
+       end if
+       time = ndcur + nscur/86400._r8
+!++dbg
+      write(iulog,*)'t,nhtfrq,hstwr,prev: ',t,nhtfrq(t),hstwr(t),prev
+!--dbg
       if (is_initfile(file_index=t)) then
         tdata = time   ! Inithist file is always instantanious data
       else
@@ -5591,9 +5641,9 @@ end subroutine print_active_fldlst
         tdata(2) = time
       end if
       ! Set midpoint date/datesec for accumulated file
-      call set_date_from_time_float((tdata(1) + tdata(2)) / 2._r8, yr, mon, day, ncsec_temp)
-      ncsec(accumulated_file_index) = ncsec_temp
-      ncdate(accumulated_file_index) = yr*10000 + mon*100 + day
+      call set_date_from_time_float((tdata(1) + tdata(2)) / 2._r8, yr_mid, mon_mid, day_mid, &
+                                     ncsec(accumulated_file_index) )
+      ncdate(accumulated_file_index) = yr_mid*10000 + mon_mid*100 + day_mid
       if (hstwr(t) .or. (restart .and. rgnht(t))) then
         if(masterproc) then
           if(is_initfile(file_index=t)) then
@@ -5609,7 +5659,7 @@ end subroutine print_active_fldlst
               if (f == instantaneous_file_index) then
                 write(iulog,200) nfils(t),'instantaneous',t,yr,mon,day,ncsec(f)
               else
-                write(iulog,200) nfils(t),'accumulated',t,yr,mon,day,ncsec(f)
+                write(iulog,200) nfils(t),'accumulated',t,yr_mid,mon_mid,day_mid,ncsec(f)
               end if
 200           format('WSHIST: writing time sample ',i3,' to ', a, ' h-file ', &
                    i1,' DATE=',i4.4,'/',i2.2,'/',i2.2,' NCSEC=',i6)
