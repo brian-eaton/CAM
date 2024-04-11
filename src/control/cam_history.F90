@@ -5345,11 +5345,11 @@ end subroutine print_active_fldlst
             call pio_setframe(tape(t)%Files(f), compid, int(max(1,nfils(t)),kind=PIO_OFFSET_KIND))
             call write_interpolated(tape(t)%Files(f), varid, compid,              &
                  tape(t)%hlist(fld)%hbuf, tape(t)%hlist(compind)%hbuf,          &
-                 mdimsize, ncreal, fdecomp)
+                 mdimsize, ncreal, fdecomp, tape(t)%hlist(fld)%field%fillvalue)
           else if (tape(t)%hlist(fld)%field%zonal_complement <= 0) then
             ! Scalar field
-            call write_interpolated(tape(t)%Files(f), varid,                      &
-                 tape(t)%hlist(fld)%hbuf, mdimsize, ncreal, fdecomp)
+            call write_interpolated(tape(t)%Files(f), varid, tape(t)%hlist(fld)%hbuf, &
+                 mdimsize, ncreal, fdecomp, tape(t)%hlist(fld)%field%fillvalue)
           end if
         else if (nadims == 2) then
           ! Special case for 2D field (no levels) due to hbuf structure

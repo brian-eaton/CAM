@@ -6,7 +6,6 @@ module interp_mod
   use interpolate_mod,     only: interp_gweight => gweight
   use dyn_grid,            only: elem,fvm
   use spmd_utils,          only: iam
-  use cam_history_support, only: fillvalue
   use hybrid_mod,          only: hybrid_t, config_thread_region
   use cam_abortutils,      only: endrun
 
@@ -186,7 +185,9 @@ CONTAINS
     end if
   end subroutine set_interp_hfile
 
-  subroutine write_interpolated_scalar(File, varid, fld, numlev, data_type, decomp_type)
+  subroutine write_interpolated_scalar(File, varid, fld, numlev, data_type, decomp_type, &
+                                       fillvalue)
+
     use pio,              only: file_desc_t, var_desc_t
     use pio,              only: iosystem_desc_t
     use pio,              only: pio_initdecomp, pio_freedecomp
@@ -214,6 +215,7 @@ CONTAINS
     type(var_desc_t) , intent(inout) :: varid
     real(r8),          intent(in)    :: fld(:,:,:)
     integer,           intent(in)    :: numlev, data_type, decomp_type
+    real(r8),          intent(in)    :: fillvalue
     !
     ! local variables
     !
@@ -404,7 +406,8 @@ CONTAINS
 
   end subroutine write_interpolated_scalar
 
-  subroutine write_interpolated_vector(File, varidu, varidv, fldu, fldv, numlev, data_type, decomp_type)
+  subroutine write_interpolated_vector(File, varidu, varidv, fldu, fldv, numlev, data_type, decomp_type, &
+                                       fillvalue)
     use pio,              only: file_desc_t, var_desc_t
     use pio,              only: iosystem_desc_t
     use pio,              only: pio_initdecomp, pio_freedecomp
@@ -433,6 +436,7 @@ CONTAINS
     type(var_desc_t),  intent(inout) :: varidu, varidv
     real(r8),          intent(in)    :: fldu(:,:,:), fldv(:,:,:)
     integer,           intent(in)    :: numlev, data_type, decomp_type
+    real(r8),          intent(in)    :: fillvalue
 
     type(hybrid_t)                 :: hybrid
     type(io_desc_t)                :: iodesc
