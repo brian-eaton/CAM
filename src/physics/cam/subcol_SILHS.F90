@@ -839,7 +839,7 @@ contains
       real(r8), pointer, dimension(:,:) :: khzm_in   ! Eddy diffusivity coef
       
       logical, parameter :: l_est_kessler_microphys = .false.
-      logical, parameter :: l_outfld_subcol         = .false.
+      logical, parameter :: l_outfld_subcol         = .true.
       
       type(grid) :: gr
       
