@@ -1534,8 +1534,8 @@ CONTAINS
 
   !#######################################################################
 
-  subroutine write_restart_history ( File, &
-       yr_spec, mon_spec, day_spec, sec_spec )
+  subroutine write_restart_history(File)
+
     use cam_history_support, only: hist_coord_name, registeredmdims
 
     implicit none
@@ -1544,10 +1544,6 @@ CONTAINS
     ! Arguments
     !
     type(file_desc_t), intent(inout) :: file         ! PIO restart file pointer
-    integer, intent(in), optional :: yr_spec         ! Simulation year
-    integer, intent(in), optional :: mon_spec        ! Simulation month
-    integer, intent(in), optional :: day_spec        ! Simulation day
-    integer, intent(in), optional :: sec_spec        ! Seconds into current simulation day
     !
     ! Local workspace
     !

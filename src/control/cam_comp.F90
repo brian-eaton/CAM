@@ -358,14 +358,14 @@ subroutine cam_run4( cam_out, cam_in, rstwr, nlend, &
    use qneg_module,      only: qneg_print_summary
    use time_manager,     only: is_last_step
 
-   type(cam_out_t), intent(inout)        :: cam_out(begchunk:endchunk)
-   type(cam_in_t) , intent(inout)        :: cam_in(begchunk:endchunk)
-   logical            , intent(in)           :: rstwr           ! true => write restart file
-   logical            , intent(in)           :: nlend           ! true => this is final timestep
-   integer            , intent(in), optional :: yr_spec         ! Simulation year
-   integer            , intent(in), optional :: mon_spec        ! Simulation month
-   integer            , intent(in), optional :: day_spec        ! Simulation day
-   integer            , intent(in), optional :: sec_spec        ! Seconds into current simulation day
+   type(cam_out_t), intent(inout) :: cam_out(begchunk:endchunk)
+   type(cam_in_t) , intent(inout) :: cam_in(begchunk:endchunk)
+   logical        , intent(in)    :: rstwr           ! true => write restart file
+   logical        , intent(in)    :: nlend           ! true => this is final timestep
+   integer        , intent(in)    :: yr_spec         ! Simulation year
+   integer        , intent(in)    :: mon_spec        ! Simulation month
+   integer        , intent(in)    :: day_spec        ! Simulation day
+   integer        , intent(in)    :: sec_spec        ! Seconds into current simulation day
 
    !----------------------------------------------------------
    ! History and restart logic: Write and/or dispose history tapes if required
@@ -381,12 +381,8 @@ subroutine cam_run4( cam_out, cam_in, rstwr, nlend, &
    !
    if (rstwr) then
       call t_startf ('cam_write_restart')
-      if (present(yr_spec).and.present(mon_spec).and.present(day_spec).and.present(sec_spec)) then
-         call cam_write_restart(cam_in, cam_out, dyn_out, pbuf2d, &
-              yr_spec=yr_spec, mon_spec=mon_spec, day_spec=day_spec, sec_spec= sec_spec )
-      else
-         call cam_write_restart(cam_in, cam_out, dyn_out, pbuf2d )
-      end if
+      call cam_write_restart(cam_in, cam_out, dyn_out, pbuf2d, &
+                             yr_spec, mon_spec, day_spec, sec_spec)
       call t_stopf  ('cam_write_restart')
    end if
 
