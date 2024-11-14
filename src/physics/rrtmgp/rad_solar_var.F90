@@ -7,10 +7,11 @@
 module rad_solar_var
 
   use shr_kind_mod ,     only : r8 => shr_kind_r8
-  use radconstants,      only : nswbands, get_sw_spectral_boundaries
+  use radconstants,      only : nswbands, get_sw_spectral_boundaries, band2gpt_sw
   use solar_irrad_data,  only : sol_irrad, we, nbins, has_spectrum, sol_tsi
   use solar_irrad_data,  only : do_spctrl_scaling
   use cam_abortutils,    only : endrun
+  use error_messages,    only : alloc_err
 
   implicit none
   save
@@ -69,28 +70,35 @@ contains
 !-------------------------------------------------------------------------------
 !-------------------------------------------------------------------------------
 
-  subroutine get_variability(toa_flux, band2gpt, sfac) 
+  subroutine get_variability(toa_flux, sfac) 
 
      ! Arguments 
      real(r8), intent(in)  :: toa_flux(:,:) ! TOA flux to be scaled (columns,gpts)
-     integer,  intent(in)  :: band2gpt(2,:) ! start and end gpt indices for each band
      real(r8), intent(out) :: sfac(:,:)     ! scaling factors (columns,gpts)
 
      ! Local variables 
-     integer :: i, band_start, band_end
+     integer :: i, j, istat, gpt_start, gpt_end, ncols
+     real(r8), allocatable :: scale(:)
+     character(len=*), parameter :: sub = 'get_variability'
     
      if (do_spctrl_scaling) then 
 
         ! Determine target irradiance for each band
         call integrate_spectrum(nbins, nswbands, we, radbinmin, radbinmax, sol_irrad, irrad)
 
+        ncols = size(toa_flux, 1)
+        allocate(scale(ncols), stat=istat)
+        call alloc_err(istat, sub, 'scale', ncols)
+
         do i = 1, nswbands 
-           band_start = band2gpt(1,i) 
-           band_end   = band2gpt(2,i) 
-           ! Calculate and apply scaling factors for this band 
-           sfac(:, band_start:band_end) = spread(irrad(i), 1, size(toa_flux, 1)) / &
-                                          sum(toa_flux(:, band_start:band_end), dim=2)
+           gpt_start = band2gpt_sw(1,i) 
+           gpt_end   = band2gpt_sw(2,i) 
+           scale = spread(irrad(i), 1, ncols) / sum(toa_flux(:, gpt_start:gpt_end), dim=2)
+           do j = gpt_start, gpt_end
+              sfac(:,j) = scale
+           end do
         end do
+
      else 
         sfac(:,:) = sol_tsi / spread(sum(toa_flux, 2), 2, size(toa_flux, 2))
      end if

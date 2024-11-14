@@ -1176,7 +1176,7 @@ subroutine radiation_tend( &
                   call stop_on_err(errmsg, sub, 'kdist_sw%gas_optics')
 
                   ! Scale the solar source
-                  get_variability(toa_flux, kdist_sw%band2gpt, sfac)
+                  call get_variability(toa_flux, sfac)
                   toa_flux = toa_flux * sfac * eccf
 
                end if
