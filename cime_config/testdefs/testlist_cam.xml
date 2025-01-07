@@ -10,6 +10,7 @@
       <machine name="derecho" compiler="intel" category="aux_cime_baselines"/>
       <machine name="derecho" compiler="intel" category="prealpha"/>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="aux_cam_short"/>
       <machine name="derecho" compiler="intel" category="aux_cam_one"/>
     </machines>
@@ -29,6 +30,7 @@
     <machines>
       <machine name="derecho" compiler="intel" category="prealpha"/>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:10:00</option>
@@ -66,6 +68,7 @@
   <test compset="FHIST_BDRD" grid="f09_f09_mg17" name="ERP_Ln9" testmods="cam/outfrq9s">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="aux_cam_short"/>
     </machines>
     <options>
@@ -78,6 +81,7 @@
       <machine name="derecho" compiler="intel" category="aux_cime_baselines"/>
       <machine name="derecho" compiler="intel" category="prealpha"/>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="aux_cam_short"/>
     </machines>
     <options>
@@ -88,6 +92,7 @@
   <test compset="FHIST" grid="f19_f19_mg17" name="SMS_Ln9" testmods="cam/outfrq9s_nochem">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:10:00</option>
@@ -127,6 +132,7 @@
   <test compset="F2010climo" grid="f09_f09_mg17" name="SMS_Ln9" testmods="cam/nudging">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="cam_nudging"/>
     </machines>
     <options>
@@ -137,6 +143,7 @@
   <test compset="F2000climo" grid="f19_f19" name="SMS_Ln9" testmods="cam/silhs">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="cam_silhs"/>
     </machines>
     <options>
@@ -148,6 +155,7 @@
     <machines>
       <machine name="derecho" compiler="intel" category="prebeta"/>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="fv3_cam"/>
     </machines>
     <options>
@@ -162,6 +170,7 @@
       <machine name="derecho" compiler="intel" category="aux_cime_baselines"/>
       <machine name="derecho" compiler="intel" category="prealpha"/>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:10:00</option>
@@ -243,6 +252,7 @@
       <machine name="derecho" compiler="intel" category="aux_cime_baselines"/>
       <machine name="derecho" compiler="intel" category="prealpha"/>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -306,6 +316,7 @@
   <test compset="PC4" grid="f19_f19_mg17" name="SMS_D_Ld5" testmods="cam/cam4_port5d">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:10:00</option>
@@ -1194,6 +1205,7 @@
   <test compset="FDABIP04" grid="T42_T42_mg17" name="ERC_D_Ln9" testmods="cam/outfrq3s_usecase">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="comment" >150 tsm, ter</option>
@@ -1204,6 +1216,7 @@
   <test compset="FHS94" grid="T42_T42_mg17" name="ERC_D_Ln9" testmods="cam/outfrq3s_usecase">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="comment" >151 tsm, ter</option>
@@ -1214,6 +1227,7 @@
   <test compset="QPC41850" grid="f45_f45_mg37" name="ERI_D_Ln18" testmods="cam/co2rmp_usecase">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="comment" >331 tsm, ter, tbr</option>
@@ -1235,6 +1249,7 @@
   <test compset="QPMOZ" grid="f19_f19_mg17" name="ERC_D_Ln9" testmods="cam/outfrq3s">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="camchem"/>
     </machines>
     <options>
@@ -1244,6 +1259,7 @@
   <test compset="QPC5M7" grid="f19_f19_mg17" name="SMS_D_Ln9" testmods="cam/outfrq9s">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -1253,6 +1269,7 @@
   <test compset="QPC5HIST" grid="f19_f19_mg17" name="SMS_D_Ld2" testmods="cam/volc_usecase">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="comment" >360 tsm</option>
@@ -1263,6 +1280,7 @@
   <test compset="QPC2000climo" grid="f19_f19_mg17" name="SMS_D_Ln9" testmods="cam/outfrq3s_usecase">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="comment" >370 tsm</option>
@@ -1273,6 +1291,7 @@
   <test compset="QPC6" grid="f19_f19_mg17" name="ERC_D_Ln9" testmods="cam/outfrq3s_cosp">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="comment" >380 tsm, ter</option>
@@ -1283,6 +1302,7 @@
   <test compset="QPX2000" grid="f19_f19_mg17" name="ERC_D_Ln9" testmods="cam/outfrq3s">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="waccmx"/>
     </machines>
     <options>
@@ -1293,6 +1313,7 @@
   <test compset="QPX2000" grid="ne16_ne16_mg17" name="SMS_D_Ln9" testmods="cam/outfrq9s">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="waccmx"/>
     </machines>
     <options>
@@ -1319,6 +1340,7 @@
   <test compset="FADIAB" grid="ne16_ne16_mg17" name="ERC_D_Ln9" testmods="cam/terminator">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="comment" >730 tsm, ter</option>
@@ -1329,6 +1351,7 @@
   <test compset="QPC5HIST" grid="ne16_ne16_mg17" name="ERC_D_Ln9" testmods="cam/outfrq3s_usecase">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="comment" >735 tsm, ter</option>
@@ -1339,6 +1362,7 @@
   <test compset="QPC6HIST" grid="ne16pg3_ne16pg3_mg17" name="ERC_D_Ln9_P144x1" testmods="cam/outfrq3s_ttrac_usecase">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="comment" >742 tsm, ter</option>
@@ -1348,6 +1372,7 @@
   <test compset="QPC5" grid="ne3_ne3_mg37" name="SCT_D_Ln7" testmods="cam/scm_prep">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="test_scam"/>
     </machines>
     <options>
@@ -1359,6 +1384,7 @@
   <test compset="QPC5" grid="T42_T42_mg17" name="SCT_D_Ln7" testmods="cam/scm_prep">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="test_scam"/>
       <machine name="derecho" compiler="intel" category="prealpha"/>
     </machines>
@@ -1371,6 +1397,7 @@
   <test compset="F2000climo" grid="mpasa120_mpasa120" name="ERS_Ln9_P288x1" testmods="cam/outfrq9s_mpasa120">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:45:00</option>
@@ -1466,6 +1493,7 @@
   <test compset="FSCAMARM97" grid="T42_T42" name="SMS_D_Ln9" testmods="cam/outfrq9s">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="test_scam"/>
     </machines>
     <options>
@@ -1620,6 +1648,7 @@
   <test compset="FSD" grid="f09_f09_mg17" name="SMS_D_Ln9" testmods="cam/outfrq9s">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -1637,6 +1666,7 @@
   <test compset="FCnudged" grid="ne30pg3_ne30pg3_mg17" name="ERP_Ln9" testmods="cam/outfrq9s">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="camchem"/>
     </machines>
     <options>
@@ -1737,6 +1767,7 @@
   <test compset="FHIST" grid="ne0ARCTICne30x4_ne0ARCTICne30x4_mt12" name="SMS_D_Ln9_P1280x1" testmods="cam/outfrq9s" supported="false">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="cam_refined"/>
     </machines>
     <options>
@@ -1764,6 +1795,7 @@
   <test compset="FLTHIST" grid="ne30pg3_ne30pg3_mg17" name="ERP_D_Ln9" testmods="cam/outfrq9s">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:30:00</option>
@@ -1782,6 +1814,7 @@
   <test compset="FMTHIST" grid="ne30pg3_ne30pg3_mg17" name="SMS_D_Ln9" testmods="cam/outfrq9s">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -1800,6 +1833,7 @@
   <test compset="FCts2nudged" grid="f09_f09_mg17" name="SMS_D_Ln9" testmods="cam/outfrq9s_leapday">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="camchem"/>
     </machines>
     <options>
@@ -1844,6 +1878,7 @@
   <test compset="FC2010climo" grid="ne30pg3_ne30pg3_mg17" name="SMS_Ld1" testmods="cam/outfrq1d">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="camchem"/>
     </machines>
     <options>
@@ -1928,6 +1963,7 @@
   <test compset="FCHIST" grid="ne0CONUSne30x8_ne0CONUSne30x8_mt12" name="SMS_D_Ln9_P1280x1" testmods="cam/outfrq9s">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="camchem"/>
     </machines>
     <options>
@@ -1948,6 +1984,7 @@
     <machines>
       <machine name="derecho" compiler="intel" category="geoschem"/>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -1958,6 +1995,7 @@
     <machines>
       <machine name="derecho" compiler="intel" category="camchem"/>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:30:00</option>
@@ -1988,6 +2026,7 @@
   <test compset="FCSD_HCO" grid="f09_f09_mg17" name="SMS_Lh12" testmods="cam/outfrq3h" supported="false">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="camchem_hco"/>
     </machines>
     <options>
@@ -2007,6 +2046,7 @@
   <test compset="FCSD_HCO" grid="f09_f09_mg17" name="ERP_Ln9" testmods="cam/outfrq9s" supported="false">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="camchem_hco"/>
     </machines>
     <options>
@@ -2061,6 +2101,7 @@
     <machines>
       <machine name="izumi" compiler="nag" category="test_spcam"/>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -2253,6 +2294,7 @@
   <test compset="FHISTC_MTt1s" grid="ne30pg3_ne30pg3_mg17" name="SMS_D_Ln9_P1280x1" testmods="cam/outfrq9s_Leung_dust">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="camchem"/>
     </machines>
     <options>
@@ -2282,6 +2324,7 @@
     <machines>
       <machine name="derecho" compiler="intel" category="camchem"/>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:40:00</option>
@@ -2291,6 +2334,7 @@
   <test compset="FW2000climo" grid="f09_f09_mg17" name="SMS_Ld1" testmods="cam/outfrq1d">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="waccm"/>
       <machine name="derecho" compiler="intel" category="prebeta"/>
     </machines>
@@ -2310,6 +2354,7 @@
   <test compset="FWma2000climo" grid="f19_f19_mg17" name="SMS_D_Ln9" testmods="cam/outfrq9s">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="waccm"/>
     </machines>
     <options>
@@ -2383,6 +2428,7 @@
   <test compset="FW1850" grid="f09_f09_mg17" name="SMS_Ln9" testmods="cam/reduced_hist3s">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="prealpha"/>
     </machines>
     <options>
@@ -2409,6 +2455,7 @@
   <test compset="FWHIST" grid="f09_f09_mg17" name="ERP_Ld3" testmods="cam/reduced_hist1d">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:50:00</option>
@@ -2435,6 +2482,7 @@
     <machines>
       <machine name="derecho" compiler="intel" category="waccmx"/>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -2444,6 +2492,7 @@
     <machines>
       <machine name="derecho" compiler="intel" category="waccmx"/>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:40:00</option>
@@ -2453,6 +2502,7 @@
     <machines>
       <machine name="derecho" compiler="intel" category="waccmx"/>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -2575,6 +2625,7 @@
     <machines>
       <machine name="derecho" compiler="intel" category="waccmx"/>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -2643,6 +2694,7 @@
     <machines>
       <machine name="derecho" compiler="intel" category="waccm"/>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:10:00</option>
@@ -2767,6 +2819,7 @@
     <machines>
       <machine name="derecho" compiler="intel" category="waccm"/>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:10:00</option>
@@ -2786,6 +2839,7 @@
     <machines>
       <machine name="derecho" compiler="intel" category="waccm"/>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:40:00</option>
@@ -2794,6 +2848,7 @@
   <test compset="FW2000climo" grid="ne30pg3_ne30pg3_mg17" name="SMS_Ln9" testmods="cam/outfrq9s_rrtmgp">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -2828,6 +2883,7 @@
     <machines>
       <machine name="derecho" compiler="intel" category="waccm"/>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:20:00</option>
@@ -2881,6 +2937,7 @@
   <test compset="PC6" grid="f09_f09_mg17" name="SMS_Ld5" testmods="cam/cam6_port_f09">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
       <machine name="derecho" compiler="intel" category="prealpha"/>
       <machine name="derecho" compiler="intel" category="test_port"/>
     </machines>
@@ -2914,6 +2971,7 @@
   <test compset="FADIAB" grid="ne0TESTONLYne5x4_ne0TESTONLYne5x4_mg37" name="ERS_Ln9" testmods="cam/outfrq3s_refined" supported="false">
     <machines>
       <machine name="derecho" compiler="intel" category="aux_cam"/>
+      <machine name="derecho" compiler="intel-oneapi" category="aux_cam"/>
     </machines>
     <options>
       <option name="wallclock">00:10:00</option>
