@@ -1242,9 +1242,8 @@ elsif ($phys_pkg eq 'cam4') {
     $nlev = 26;
 }
 else {
-    # This will be used for Held-Suarez and other 'simple' physics
-    # We may change this to 32 once IC files are available.
-    $nlev = 30;
+    # Simple physics
+    $nlev = 58;
 }
 
 # user override
